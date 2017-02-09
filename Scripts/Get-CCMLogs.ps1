@@ -25,7 +25,8 @@ Begin {
  $SMSTSLogs = "\\$ComputerName\c$\_SMSTaskSequence\Logs"
  $CCMLogs = "\\$ComputerName\c$\Windows\CCM\Logs"
  $CCMSetupLogs = "\\$ComputerName\c$\Windows\CCMSetup\Logs"
- $SavePath = "\\(Server)\PulledLogs\$ComputerName"
+ $WinUpdLog = "\\$ComputerName\c$\Windows\WindowsUpdate.log"
+ $SavePath = "\\SCCM\packages$\PulledErrorLogs\$ComputerName"
  
  If ( -Not (Test-Path $SavePath -pathType Container))
  {
@@ -37,15 +38,19 @@ End {
     {
     New-Item -Path $SavePath\CCM\Logs -Type Container -Force
     New-Item -Path $SavePath\CCMSetup\Logs -Type Container -Force
-	Copy-Item "$CCMLogs\*.*" $SavePath\CCM\Logs -Force -Recurse
+    New-Item -Path $SavePath\Windows -Type Container -Force
+    Copy-Item "$CCMLogs\*.*" $SavePath\CCM\Logs -Force -Recurse
     Copy-Item "$CCMSetupLogs\*.*" $SavePath\CCMSetup\Logs -Force -Recurse
+    Copy-Item $WinUpdLog $SavePath\Windows -Force -Recurse
     } Else {
     New-Item -Path $SavePath\_SMSTaskSequence\Logs -Type Container -Force
     New-Item -Path $SavePath\CCM\Logs -Type Container -Force
     New-Item -Path $SavePath\CCMSetup\Logs -Type Container -Force
+    New-Item -Path $SavePath\Windows -Type Container -Force
     Copy-Item "$SMSTSLogs\*.*" $SavePath\_SMSTaskSequence\Logs -Force -Recurse
     Copy-Item "$CCMLogs\*.*" $SavePath\CCM\Logs -Force -Recurse
     Copy-Item "$CCMSetupLogs\*.*" $SavePath\CCMSetup\Logs -Force -Recurse
+    Copy-Item $WinUpdLog $SavePath\Windows -Force -Recurse
     }
   } #End
- }
+}
